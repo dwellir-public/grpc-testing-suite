@@ -127,7 +127,9 @@ def collect_data(duration_minutes, endpoint, use_ssl=True, api_key=None):
                     # Calculate diff
                     if block_ts:
                         try:
-                            block_ts_int = int(block_ts)
+                            # stripping nanoseconds so `strptime` is able to parse block time
+                            block_time = datetime.strptime(block_ts[:23], '%Y-%m-%dT%H:%M:%S.%f')
+                            block_ts_int = block_time.timestamp()
                             diff_ms = local_ts_ms - block_ts_int
                         except:
                             diff_ms = None
